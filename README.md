@@ -40,3 +40,9 @@ optional arguments:
 # Metrics
 Currently, the exporter exposes metrics for highstate conformity only:
 
+Metric | Description
+-------|-------------
+saltstack_states_total | Number of states which apply to the minion in highstate
+saltstack_nonhigh_states | Number of states which would change on state.highstate
+saltstack_error_states | Number of states which returns an error on highstate dry-run
+saltstack_last_highstate | Timestamp of the last highstate test run

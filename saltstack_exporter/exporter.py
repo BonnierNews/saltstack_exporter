@@ -8,6 +8,7 @@ from tornado import web, ioloop
 from prometheus_client import generate_latest
 from prometheus_client import CONTENT_TYPE_LATEST
 from prometheus_client.core import GaugeMetricFamily
+from prometheus_client.core import CounterMetricFamily
 from prometheus_client.core import REGISTRY
 
 
@@ -84,7 +85,7 @@ class SaltHighstateCollector(object):
         success = isinstance(self.statedata, dict)
 
         if not success:
-            log.error('Failed to collect Highstate. Return data: {0}'.format(statedata))
+            log.error('Failed to collect Highstate. Return data: {0}'.format(self.statedata))
             return
 
         yield self.states_total(len(self.statedata))
