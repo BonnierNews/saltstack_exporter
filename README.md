@@ -5,8 +5,16 @@ The exporter must run on a minion, and have permission to execute commands local
 To install and run:
 
 ```shell
-pip install prometheus_client
-python exporter.py
+pip install saltstack_exporter
+saltstack_exporter
+```
+
+The direct invocation works since `pip` installs a wrapper executable script.
+If this does not work on your platform, call python directly on `exporter.py`
+in the `site_packages` directory. For example, on Linux with Python 2.7:
+
+```shell
+python /usr/lib/python2.7/site-packages/saltstack_exporter/exporter.py
 ```
 
 # Configuration
@@ -25,4 +33,7 @@ optional arguments:
   --log-level LOG_LEVEL
                         log level (default: WARN)
 ```
+
+# Metrics
+Currently, the exporter exposes metrics for highstate conformity only:
 

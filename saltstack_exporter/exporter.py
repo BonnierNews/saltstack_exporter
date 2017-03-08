@@ -6,7 +6,6 @@ from tornado import web, ioloop
 from prometheus_client import generate_latest
 from prometheus_client import CONTENT_TYPE_LATEST
 from prometheus_client.core import GaugeMetricFamily
-from prometheus_client.core import CounterMetricFamily
 from prometheus_client.core import REGISTRY
 
 
@@ -28,7 +27,7 @@ parser.add_argument(
     default=logging.WARN
 )
 args = parser.parse_args()
-
+log = logging.getLogger(__name__)
 
 class SaltHighstateCollector(object):
     def __init__(self, caller):
@@ -60,6 +59,7 @@ class SaltHighstateCollector(object):
         success = isinstance(statedata, dict)
 
         if not success:
+            log.error('Failed to collect Highstate. Return data: {0}'.format(statedata))
             return
 
         yield self.states_total(len(statedata))
@@ -108,7 +108,7 @@ class MetricsHandler(web.RequestHandler):
 
 
 def init_logging():
-    loggers = ['tornado.access', 'tornado.application', 'tornado.general']
+    loggers = [__name__, 'tornado.access', 'tornado.application', 'tornado.general']
     for logger_name in loggers:
         logger = logging.getLogger(logger_name)
         logger.propagate = False
@@ -116,7 +116,7 @@ def init_logging():
         stdout_handler = logging.StreamHandler(sys.stdout)
         logger.addHandler(stdout_handler)
 
-if __name__ == '__main__':
+def main():
     caller = client.Caller()
     REGISTRY.register(SaltHighstateCollector(caller))
 
@@ -131,3 +131,7 @@ if __name__ == '__main__':
 
     print 'Serving metrics on {}:{}'.format(args.listen_addr, args.listen_port)
     ioloop.IOLoop.current().start()
+
+
+if __name__ == '__main__':
+    main()
