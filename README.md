@@ -21,8 +21,9 @@ python /usr/lib/python2.7/site-packages/saltstack_exporter/exporter.py
 Below are the available flags:
 
 ```shell
-usage: exporter.py [-h] [--listen-addr LISTEN_ADDR]
-                   [--listen-port LISTEN_PORT] [--log-level LOG_LEVEL]
+usage: exporter.py [-h] [--listen-addr LISTEN_ADDR] [--listen-port LISTEN_PORT]
+                   [--highstate-interval HIGHSTATE_INTERVAL]
+                   [--log-level LOG_LEVEL]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -30,6 +31,8 @@ optional arguments:
                         address to bind to (default: 0.0.0.0)
   --listen-port LISTEN_PORT
                         port to bind to (default: 9175)
+  --highstate-interval HIGHSTATE_INTERVAL
+                        interval between highstate test runs (default: 300)
   --log-level LOG_LEVEL
                         log level (default: WARN)
 ```
