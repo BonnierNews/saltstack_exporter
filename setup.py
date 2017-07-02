@@ -7,7 +7,7 @@ setup(
     version='0.0.6',
 
     description='Prometheus exporter for Saltstack minions',
-    url='https://github.com/DagensNyheter/saltstack_exporter',
+    url='https://github.com/BonnierNews/saltstack_exporter',
     author='BonnierNews',
     author_email='',
     license='MIT',
