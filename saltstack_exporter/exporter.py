@@ -11,6 +11,7 @@ from prometheus_client.core import GaugeMetricFamily
 from prometheus_client.core import CounterMetricFamily
 from prometheus_client.core import REGISTRY
 
+print 'Successfully imported all dependencies'
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -36,10 +37,13 @@ parser.add_argument(
     default=logging.WARN
 )
 args = parser.parse_args()
+print 'Successfully parsed all arguments'
 log = logging.getLogger(__name__)
+print 'Successfully set up logger'
 
 class SaltHighstateCollector(object):
     def __init__(self, caller, highstate_interval):
+        print 'Highstate collector: Initializing members'
         self.caller = caller
         self.statedata = None
         self.last_highstate = 0
@@ -64,13 +68,16 @@ class SaltHighstateCollector(object):
             'Timestamp of the last highstate test run',
             value=sample
         )
-
+        print 'Highstate collector: Member initialization done'
         # Start worker thread that will collect metrics async
         thread = threading.Thread(target=self.collect_worker, args=(highstate_interval,))
+        print 'Highstate collector: Background thread created'
         try:
             thread.setDaemon(True)
+            print 'Highstate collector: Starting thread'
             thread.start()
         except (KeyboardInterrupt, SystemExit):
+            print 'Highstate collector: Interrupting thread'
             thread.join(0)
             sys.exit()
 
@@ -151,16 +158,19 @@ def init_logging():
         logger.addHandler(stdout_handler)
 
 def main():
+    print 'Initializing salt client'
     caller = client.Caller()
+    print 'Registering highstate collector'
     REGISTRY.register(SaltHighstateCollector(caller, args.highstate_interval))
-
+    print 'Initializing logging'
     init_logging()
-
+    print 'Creating web application'
     app = web.Application([
         (r'/', RootHandler),
         (r'/healthcheck', HealthcheckHandler),
         (r'/metrics', MetricsHandler)
     ])
+    print 'Setting up listener'
     app.listen(args.listen_port, args.listen_addr)
 
     print 'Serving metrics on {}:{}'.format(args.listen_addr, args.listen_port)
@@ -168,4 +178,5 @@ def main():
 
 
 if __name__ == '__main__':
+    print 'Starting saltstack_exporter'
     main()
